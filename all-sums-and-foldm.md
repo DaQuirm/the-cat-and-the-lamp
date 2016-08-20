@@ -184,3 +184,8 @@ function sums ([head, ...tail], n = 0) {
     sums(tail, n + head));
 }
 ```
+
+```purescript
+sums :: Array Int -> Array Int
+sums = foldM (\x y -> [x, x + y]) 0
+```
