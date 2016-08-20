@@ -126,8 +126,8 @@ There are but two ways for any binary sequence to become a _longer_ binary seque
 a 0 or 1 have to come over and be interested in hot-dogs enough to join the queue:
 
 [C.M.O.T Dibbler]
-     ?
-    / \
+     ?  
+    / \  
    0   1
 
 Now that was the first person craving sausage-in-a-bun. What about the guy after them? But whom? 0 or 1? Let's consider both cases:
