@@ -173,5 +173,14 @@ For [1, 2, 10]:
      / \    / \    / \    / \
 +10  0 10   2 12   1 11   3 13
 
+In order to get the sums, we just need to walk all the paths until we reach the leaves.
+See how we started with _sums_, moved on to _sequences_ and ended up with _paths_?
+That kind of stuff often happens to you when you are doing functional programming and playing with computational abstractions.
 
-
+```js
+function sums ([head, ...tail], n = 0) {
+  if (head === undefined) { return [n]; }
+  return sums(tail, n).concat(
+    sums(tail, n + head));
+}
+```
