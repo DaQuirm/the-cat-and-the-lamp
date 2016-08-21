@@ -116,7 +116,7 @@ a<sub>2</sub> = 5 >> 2 & 1 = 1 (**1**01)
 
 and it's all zeroes from here for the remaining a's.
 
-IT'S A SHARK!! GOOD LORD IT'S A HUGE BLOOD-THIRSTY SHARK!! :shark:
+IT'S A SHARK!! GOOD LORD IT'S A HUGE BLOOD-THIRSTY SHARK!!
 
 Let's not get there, it certainly doesn't look pretty.
 
