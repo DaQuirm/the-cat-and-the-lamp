@@ -329,7 +329,7 @@ const sums = foldM((x, y) => [x, x + y])(0);
 
 ```
 
-All functions in Purescript are curried, so in order to pass them multiple arguments you have to make multiple columns.
+All functions in Purescript are curried, so in order to pass them multiple arguments you have to make multiple calls.
 This allows to omit any number of such calls, easily constructing partial functions.
 
 So `fold` is sort of like `reduce` in JavaScript, but what's `foldM`?
@@ -427,7 +427,8 @@ instance applicativeArray :: Applicative Array where
 
 Just create an array with the value as its only element, no big deal.
 
-Hold on, that's precisely what we were doing in our JavaScript solution!
+Hold on, that's precisely what we were doing in our JavaScript solution! Remember we had to wrap that sum, like this: `[sum]`?
+
 Good that someone thought about abstracting this little thing away, right?
 
 Ooookay, maybe get another tea/coffee and some sweets for this one, we're finding out what
