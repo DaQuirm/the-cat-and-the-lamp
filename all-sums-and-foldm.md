@@ -1,6 +1,6 @@
 ## More than Arrays
 
-Digging through @paf31's Purescript by Example is no picnic. LINK
+Digging through @paf31's [Purescript by Example](https://leanpub.com/purescript/) is no picnic.
 
 That is, there's no sandwich eating, barbecuing or frisbee throwing.
 Instead the reader is exposed to typeclasses, ADTs and monads without an oxygen supply.
@@ -449,7 +449,7 @@ Those are the two computation paths we can take!
 
 Then we stumble upon this weird `>>=`. It's called `bind` when it's not wearing infix.
 
-Again, I recommend referring to this LINK great article for visualizing what is going on here.
+Again, I recommend referring to this [great article](http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html) for visualizing what is going on here.
 Let's just say, `bind` knows how to extract stuff out of monadic containers and apply functions to said stuff, that return new monadic containers of the same shape.
 
 The function we'd like to apply to `[0, 1]` is `\a' -> foldM f a' bs`. But _how_ is it applied?
