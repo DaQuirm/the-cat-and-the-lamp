@@ -56,11 +56,11 @@ What?
 It's all of them, with a<sub>i</sub> taking value 0 or 1 and giving us a neat way to encode any number subset. 
 The "all-encompassing" sum thus becomes, in terms of a-coefficients:
 
-1 1 1 ... 1
+`1 1 1 ... 1`
 
 And zero is of course all zeroes:
 
-0 0 0 ... 0
+`0 0 0 ... 0`
 
 Between those two edge cases lies every possible sum of numbers represented by a subset denoted by a binary number.
 
@@ -70,7 +70,7 @@ This number is easily obtainable for any N:
 
 2<sup>N</sup>
 
-Let's try it out: [1, 2, 10], N = 3 so we expect 2<sup>3</sup> = 8 different sums. Not a buffet but will do for a picnic:
+Let's try it out: `[1, 2, 10]`, N = 3 so we expect 2<sup>3</sup> = 8 different sums. Not a buffet but will do for a picnic:
 
 | a's |sum|
 |:---:|:-:|
@@ -100,7 +100,7 @@ Hmmm, how do we print a nice table like the one above?
 
 We could just loop through numbers from 0 to 2<sup>N</sup>-1 and then get a<sub>i</sub> by doing a right bitwise shift...
 
-a<sub>i</sub> = M >> i & 1, with M is in [0..7]
+a<sub>i</sub> = M >> i & 1, with M is in `[0..7]`
 
 for 5:
 
@@ -325,7 +325,7 @@ const sums = foldM((x, y) => [x, x + y])(0);
 
 ```
 
-All functions in Purescript are curried so to pass them multiple arguments you have to make multiple columns.
+All functions in Purescript are curried, so in order to pass them multiple arguments you have to make multiple columns.
 This allows to omit any number of such calls, easily constructing partial functions.
 
 So `fold` is sort of like `reduce` in JavaScript, but what's `foldM`?
@@ -454,6 +454,7 @@ If you leaf through the source code a bit, you'll discover that it `mapcat`s the
 So, binding an array with a function means applying this (array-producing) function and concatenating the results!
 
 _But that means that foldM is called twice, for 0 and 1, with the remaining numbers_.
+
 That's where your pulse might heighten. Somewhat.
 
 `foldM` will return another array, which is a concatenation of further arrays, all the way to the leaves.
