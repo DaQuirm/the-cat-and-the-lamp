@@ -243,9 +243,9 @@ function sums ([head, ...tail], sum = 0) {
 ```
 
 Ok, that should be enough characters, let's run it (you still have those DevTools open, haven't you?)
-Elon Musk might have been less excited about Falcon9.
+Elon Musk might have been less excited about Falcon 9.
 
-SCREENSHOT
+![Nested array tree](/resources/sums-tree.png)
 
 Crockford's nostrils, it works! We got ourselves a scrawny binary sum bonsai, and it checks out!
 Go check it with the table values, but it LGTM.
@@ -285,13 +285,13 @@ One of the ways it can be fixed is that we always return an array:
 ...
 
 if (head === undefined) {
-     return [sum];
+    return [sum];
 }
 
 ...
 ```
 
-SCREENSHOT
+![Flat array](/resources/sums-flat-array.png)
 
 The return type changed from _tree-or-number_ to definite _array_, which should warm your heart if you're into static typing.
 But never mind that, the function works!
