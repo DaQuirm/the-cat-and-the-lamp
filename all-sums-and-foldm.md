@@ -351,7 +351,7 @@ Anyway, we've got three types at play here, `a`, `b` and `m` and `m` has to be a
 
 In our case, it's this expression: `\x y -> [x, x + y]`
 But `[x, x + y]` is an Array! Does it mean that `m a` is actually `Array a`??
-Does it mean that Array is a _Monad_. 
+Does it mean that Array is a _Monad_?!
 
 You bet it is.
 
