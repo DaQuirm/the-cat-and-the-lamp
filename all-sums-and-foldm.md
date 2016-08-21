@@ -1,9 +1,11 @@
 Digging through @paf31's Purescript by Example is no picnic. LINK
+
 That is, there's no sandwich eating, barbecuing or frisbee throwing.
 Instead the reader is exposed to typeclasses, ADTs and monads without an oxygen supply.
 
 There's this thing called `foldM`; 
 it may well be one of the reasons kids will learn Haskell at schools in the near future.
+
 Just kidding, but it's still quite fascinating. Maybe.
 
 So how do you, given an array of numbers, find all possible sums that adding any subset of those numbers yields?
