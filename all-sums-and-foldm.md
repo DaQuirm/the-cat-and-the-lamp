@@ -416,7 +416,7 @@ WTH is `(\_ -> pure a)`? WTH is `a`?
 Right, `a` is an `Int` and represents the initial value. So when we feed just the value, but no numbers, `pure a` is returned.
 That would be the counterpart to our recursion ending condition.
 
-`pure` is function (see Applicatives LINK) that, roughly speaking, wraps a simple value into a monad.
+`pure` is a function (see Applicatives LINK) that, roughly speaking, wraps a simple value into a monad.
 In our case the monad is `Array`, don't we know how values get wrapped into arrays?!
 
 Indeed:
@@ -464,7 +464,7 @@ _But that means that foldM is called twice, for 0 and 1, with the remaining numb
 That's where your pulse might heighten. Somewhat.
 
 `foldM` will return another array, which is a concatenation of further arrays, all the way to the leaves.
-So we recursively sumberge, happily binding along the way, then we get single-sum arrays, concat all the way back and get a flat array of all sums!
+So we recursively submerge, happily binding along the way, then we get single-sum arrays, concat all the way back and get a flat array of all sums!
 
 Our array-as-a-monad conveniently fits into the way `foldM`, well, folds.
 It represents exactly what we want it to be for this problem: a structure of computation paths. That's a novel way to look at arrays, isn't it? When we want to fork our computation we create an array of two elements -- and get two paths, recursively followed!
