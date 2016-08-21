@@ -1,3 +1,5 @@
+## More than Arrays
+
 Digging through @paf31's Purescript by Example is no picnic. LINK
 
 That is, there's no sandwich eating, barbecuing or frisbee throwing.
