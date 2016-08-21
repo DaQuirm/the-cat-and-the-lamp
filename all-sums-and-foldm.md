@@ -456,7 +456,7 @@ Let's just say, `bind` knows how to extract stuff out of monadic containers and 
 The function we'd like to apply to `[0, 1]` is `\a' -> foldM f a' bs`. But _how_ is it applied?
 If you leaf through the source code a bit, you'll discover that it `mapcat`s the array!
 
-So, binding an array with a function means applying this (array-producing) function and concatenating the results!
+So, binding an array with a function means applying this (array-producing) function to every item in the array and concatenating the results!
 
 _But that means that foldM is called twice, for 0 and 1, with the remaining numbers_.
 
