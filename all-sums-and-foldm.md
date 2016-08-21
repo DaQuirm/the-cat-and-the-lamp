@@ -261,8 +261,9 @@ So we advanced through the input array without preserving any previous tree "lev
 
 Then we don't actually need the tree-like structure, since it is inherently present in the nature of our computation itself!
 
-Let's bounce those arrays and produce just one, flat array with all the sums.
 Right now if we consider the return type of `sums`, we might call it "Hmmm, nested arrays, whatever" or, on second thought, a _tree_. And sometimes _number_. Ugh.
+
+Let's bounce those nested arrays and produce just one, flat array with all the sums.
 We can achieve this if instead of producing new arrays we always flatten the ones we get from the "deeper" level.
 
 `Array.prototype.concat` can help us with that:
