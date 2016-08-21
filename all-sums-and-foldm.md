@@ -128,28 +128,34 @@ Think about binary numbers as sequences.
 There are but two ways for any binary sequence to become a _longer_ binary sequence:
 a 0 or 1 have to come over and be interested in hot-dogs enough to join the queue:
 
+```
 [C.M.O.T Dibbler]
      ?  
     / \  
    0   1
+```
 
 Now that was the first person craving sausage-in-a-bun. What about the guy after them? But whom? 0 or 1? Let's consider both cases:
 
+```
 [C.M.O.T Dibbler]
       ?
     /   \
    0     1
   / \   / \
  0   1 0   1
+```
 
 Wait a minute, what is that??
 That's a freaking binary tree! Helping us to obtain binary numbers! Who would have thought??
 
 Indeed.
 
-   _x_  
+```
+   x
   / \ 
  0   1
+```
 
 For any binary number represented by a non-leaf tree node _x_ there are exactly two options to form a _longer_ binary number/sequence: to add 0 or 1 to the end by following either the left or the right branch.
 Leaves are where binary numbers end.
@@ -165,7 +171,7 @@ So if we got all possible binary sequences in that tree, we should easily make i
 That's right!
 
 For [1, 2, 10]:
-
+```
                 0
               /   \
             /       \
@@ -175,6 +181,7 @@ For [1, 2, 10]:
 +2    0      2      1      3
      / \    / \    / \    / \
 +10  0 10   2 12   1 11   3 13
+```
 
 In order to get the sums, we just need to walk all the paths until we reach the leaves.
 See how we started with _sums_, moved on to _sequences_ and ended up with _paths_?
@@ -251,7 +258,7 @@ So we advanced through the input array without preserving any previous tree "lev
 Then we don't actually need the tree-like structure, since it is inherently present in the nature of our computation itself!
 
 Let's bounce those arrays and produce just one, flat array with all the sums.
-Right now if we consider the return type of `sums`, we might call it "Hmmm, nested arrays, whatever" or, on second thought, a _tree_.
+Right now if we consider the return type of `sums`, we might call it "Hmmm, nested arrays, whatever" or, on second thought, a _tree_. And sometimes _number_. Ugh.
 We can achieve this if instead of producing new arrays we always flatten the ones we get from the "deeper" level.
 
 `Array.prototype.concat` can help us with that:
@@ -261,18 +268,32 @@ function sums ([head, ...tail], sum = 0) {
      if (head === undefined) {
           return sum;
      }
-     return [].concat(
-          sums(tail, sum),        // left or "0" subtree
-          sums(tail, sum + head)  // right or "1" subtree
-     );
+     return sums(tail, sum)                  // left or "0" subtree
+            .concat(sums(tail, sum + head)); // right or "1" subtree
+
 }
+```
+
+There's an error in this code. Can you spot it?
+
+Exactly, when we reach return a final sum, we can't call `concat` on it, since it's just a number.
+One of the ways it can be fixed is that we always return an array:
+
+```js
+...
+
+if (head === undefined) {
+     return [sum];
+}
+
+...
 ```
 
 SCREENSHOT
 
-The return type changed from _tree_ to _array_.
+The return type changed from _tree-or-number_ to definite _array_, which should warm your heart if you're into static typing.
 But never mind that, the function works!
-We can congratulate ourselves here on a problem well solved.
+We can congratulate ourselves on a problem well solved.
 Perhaps you found a better solution? Somewhere in this article there must be a hint or two on how to get in touch, I'd really appreciate that, thanks.
 
 It's time to walk away whistling, check your twitter and then check your fridge for sandwich ingredients.
@@ -324,13 +345,102 @@ Anyway, we've got three types at play here, `a`, `b` and `m` and `m` has to be a
 
 `(a -> b -> m a)` is a typical reducer upgraded to return a monad: values of `a` (accumulator) and `b` (current value) go in, `a` contained in a monad `m` goes out.
 
-That might seem peculiar, because your typical reducer usually looks like this:
+In our case, it's this expression: `\x y -> [x, x + y]`
+But `[x, x + y]` is an Array! Does it mean that `m a` is actually `Array a`??
+Does it mean that Array is a _Monad_. 
+
+You bet it is.
+
+`a` is something to pass into the first call of the folding function (`0`, just like in the JS version).
+So `a` is `Int`, therefore, `m a` is just a good old `Array Int`, an array of integers.
+
+`Array b` represents the sequence that we want to fold -- our numbers array! We know that it's `Array Int` too.
+
+`m a` stands for eventual folding result and obviously matches the return value of the folding function.
+Since resulting array of sums is `Array Int` as well, it fits perfectly.
+
+Substituting all the deduced types yields:
+
+```purescript
+foldM :: forall m a b. Monad m => (a -> b -> m a) -> a -> Array b -> m a
+-- foldM :: (Int -> Int -> Array Int) -> Int -> Array Int -> Array Int
+```
+
+We pass only the first two arguments to `foldM`, leaving it hungry for one more, `Array Int`.
+Partial `foldM` now has this signature:
+
+```purescript
+foldM' :: Array Int -> Array Int
+```
+
+which matches `sums`'s signature:
+
+```purescript
+sums :: Array Int -> Array Int
+```
+
+Let's get back to the folding function we pass to `foldM`.
+Its signature might seem peculiar, because your typical reducer usually looks like this:
 
 `(a -> b -> a)`
 
-where it "merges" `b`s into `a` and then starts over again.
+that is, it "merges" `b`s into `a` and then it's ready to be called again.
 
 So we have a way to go from `a` to `m a`. But not from `m a` to `a`.
-What the heck are we supposed to do in the following iteration?
+What the heck are we supposed to do when we have to pass `m a` into the "reducer" (or should I say "folder")?
 
-Turns out, we _do_ have such a way.
+Turns out, `foldM` does something behind the scenes making use of the fact that `m a` is a monad.
+
+That's the source code for `foldM` as declared in the `Data.Array` module.
+
+```purescript
+-- | Perform a fold using a monadic step function.
+foldM :: forall m a b. Monad m => (a -> b -> m a) -> a -> Array b -> m a
+foldM f a = uncons' (\_ -> pure a) (\b bs -> f a b >>= \a' -> foldM f a' bs)
+```
+
+Let's see... 
+
+`foldM` ends up "only" calling `uncons'`, which breaks an array into the first element `b` and the rest of the array `bs`, much like our JavaScript head-tail argument destructuring. Then it calls either the first function you pass it (if the array turned out to be empty) or the second one, passing it `b` and `bs`.
+
+For `foldM` the former is `(\_ -> pure a)`
+
+and the latter is `(\b bs -> f a b >>= \a' -> foldM f a' bs)`
+
+WTH is `(\_ -> pure a)`? WTH is `a`?
+Right, `a` is an `Int` and represents the initial value. So when we feed just the value, but no numbers, `pure a` is returned.
+That would be the counterpart to our recursion ending condition.
+
+`pure a` is function (see Applicatives LINK) that, roughly speaking, wraps a simple value into a monad.
+In our case the monad is `Array`, don't we know how values get wrapped into arrays?!
+
+Indeed:
+
+```purescript
+instance applicativeArray :: Applicative Array where
+  pure x = [x]
+```
+
+Just create an array with the value as its only element, no big deal.
+
+Hold on, that's precisely what we were doing in our JavaScript solution!
+Good that someone thought about abstracting this little thing away, right?
+
+Ooookay, maybe get another tea/coffee and some sweets for this one, we're finding out what
+
+```purescript
+(\b bs -> f a b >>= \a' -> foldM f a' bs)
+```
+
+does.
+
+
+To recap, `b` and `bs` are the new `head` and `tail`.
+Let's feed `b` together with `a`, the "sum" (scroll up to see where it was in JS code) argument into `f`
+
+`f` is still that simple function we earlier passed into `foldM`: `\x y -> [x, x + y]`
+
+For example, for initial zero sum and the first number `1` it will therefore return `[0, 1]`.
+Those are the two computation paths we can take!
+
+Then we stumble upon this weird `>>=`.
