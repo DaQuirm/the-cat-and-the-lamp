@@ -126,7 +126,7 @@ What a chore.
 Instead of decomposing binary numbers we'd rather be composing.
 Think about binary numbers as sequences.
 There are but two ways for any binary sequence to become a _longer_ binary sequence:
-a 0 or 1 have to come over and be interested in hot-dogs enough to join the queue:
+a `0` or `1` have to come over and be interested in hot-dogs enough to join the queue:
 
 ```
 [C.M.O.T Dibbler]
@@ -135,7 +135,7 @@ a 0 or 1 have to come over and be interested in hot-dogs enough to join the queu
    0   1
 ```
 
-Now that was the first person craving sausage-in-a-bun. What about the guy after them? But whom? 0 or 1? Let's consider both cases:
+Now that was the first person craving sausage-in-a-bun. What about the guy after them? But whom? `0` or `1`? Let's consider both cases:
 
 ```
 [C.M.O.T Dibbler]
@@ -443,4 +443,25 @@ Let's feed `b` together with `a`, the "sum" (scroll up to see where it was in JS
 For example, for initial zero sum and the first number `1` it will therefore return `[0, 1]`.
 Those are the two computation paths we can take!
 
-Then we stumble upon this weird `>>=`.
+Then we stumble upon this weird `>>=`. It's called `bind` when it's not wearing infix.
+
+Again, I recommend referring to this LINK great article for visualizing what is going on here.
+Let's just say, `bind` knows how to extract stuff out of monadic containers and apply functions to said stuff, that return new monadic containers of the same shape.
+
+The function we'd like to apply to `[0, 1]` is `\a' -> foldM f a' bs`. But _how_ is it applied?
+If you leaf through the source code a bit, you'll discover that it `mapcat`s the array!
+
+So, binding an array with a function means applying this (array-producing) function and concatenating the results!
+
+_But that means that foldM is called twice, for 0 and 1, with the remaining numbers_.
+That's where your pulse might heighten. Somewhat.
+
+`foldM` will return another array, which is a concatenation of further arrays, all the way to the leaves.
+So we recursively sumberge, happily binding along the way, then we get single-sum arrays, concat all the way back and get a flat array of all sums!
+
+Our array-as-a-monad conveniently fits into the way `foldM`, well, folds.
+It represents exactly what we want it to be for this problem: a structure of computation paths. That's a novel way to look at arrays, isn't it? When we want to fork our computation we create an array of two elements -- and get two paths, recursively followed!
+
+Sit back and enjoy your tea/coffee and this tiny but delicious bit of newfound knowledge.
+
+
