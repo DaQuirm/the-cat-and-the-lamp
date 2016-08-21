@@ -281,7 +281,7 @@ function sums ([head, ...tail], sum = 0) {
 There's an error in this code. Can you spot it?
 
 Exactly, when we reach return a final sum, we can't call `concat` on it, since it's just a number.
-One of the ways it can be fixed is that we always return an array:
+One of the ways it can be fixed is by always returning an array:
 
 ```js
 ...
