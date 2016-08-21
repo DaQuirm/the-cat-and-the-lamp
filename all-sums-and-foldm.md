@@ -42,9 +42,10 @@ What if you strike out all the numbers?
 You get a zero, which is reasonable to regard as a valid sum of an empty subset of numbers.
 
 Next let's imagine our striking out is multiplying by zero and keeping a number in the sum is multiplying by one.
+
 Hey, a binary linear combination!
 
-No need to call the lifeguards, the water is to shallow to drown:
+No need to call the lifeguards, the water is too shallow to drown:
 
 a<sub>0</sub>n<sub>0</sub> + a<sub>1</sub>n<sub>1</sub> + a<sub>2</sub>n<sub>2</sub> + ... + a<sub>N</sub>n<sub>N</sub>
 
@@ -52,7 +53,7 @@ Which sum is that? All of them!
 
 What?
 
-All of them, with a<sub>i</sub> taking value 0 or 1 and giving us a neat way to encode any number subset. 
+It's all of them, with a<sub>i</sub> taking value 0 or 1 and giving us a neat way to encode any number subset. 
 The "all-encompassing" sum thus becomes, in terms of a-coefficients:
 
 1 1 1 ... 1
@@ -62,7 +63,9 @@ And zero is of course all zeroes:
 0 0 0 ... 0
 
 Between those two edge cases lies every possible sum of numbers represented by a subset denoted by a binary number.
+
 This arms us with a delicious way of thinking about the sums of N numbers as binary numbers of N digits.
+
 This number is easily obtainable for any N:
 
 2<sup>N</sup>
@@ -177,15 +180,157 @@ In order to get the sums, we just need to walk all the paths until we reach the 
 See how we started with _sums_, moved on to _sequences_ and ended up with _paths_?
 That kind of stuff often happens to you when you are doing functional programming and playing with computational abstractions.
 
+You're still waiting for us to start coding?
+Okay, okay, less talking, more typing, but don't expect it to be too long though.
+
+A good thing to start with would be a function called `sums` that accepts an array of numbers.
+What should it return? We could build our binary tree with simple 2-element arrays, holding left and right subtrees.
+Let's use recursive calls for building those:
+
 ```js
-function sums ([head, ...tail], n = 0) {
-  if (head === undefined) { return [n]; }
-  return sums(tail, n).concat(
-    sums(tail, n + head));
+function sums (numbers) {
+     return [
+          sums(), // left or "0" subtree
+          sums()  // right or "1" subtree
+     ]
 }
 ```
+
+What arguments go inside the calls? Obviously simply passing numbers won't cut it, we have to show some progress as we follow the computational paths. 
+
+First, let's add another argument, `sum`, to our function to indicate the path tree node we're going through.
+Its value for the very first `sums` call would be `0`, just as in the root of our tree.
+For every function call we'll get next number from the array and calculate two possible next values of `sum`: with or without this number, that is, for `0` and `1` paths we take:
+
+
+```js
+function sums ([head, ...tail], sum = 0) {
+     return [
+          sums(tail, sum),        // left or "0" subtree
+          sums(tail, sum + head)  // right or "1" subtree
+     ]
+}
+```
+
+See? The `numbers` array becomes "_remaining_ numbers sum up" and is destructured into `head` containing the first element (for current iteration) and `tail` containing the rest of them to be passed further down.
+
+Now we only need to know when to stop this fun train.
+And that is where we detect that we have reached our leaves or, in fact, actual sums.
+It's quite easy, our "_remaining_ numbers" array should be empty, since its length is equal to the height of the tree!
+This can be detected, for instance, by checking if `head` is undefined (also known as Saturday Morning Condition).
+
+What do we do in this case? Let's simply return our "leaf" value: the sum.
+
+```js
+function sums ([head, ...tail], sum = 0) {
+     if (head === undefined) {
+          return sum;
+     }
+     return [
+          sums(tail, sum),        // left or "0" subtree
+          sums(tail, sum + head)  // right or "1" subtree
+     ]
+}
+```
+
+Ok, that should be enough characters, let's run it (you still have those DevTools open, haven't you?)
+Elon Musk might have been less excited about Falcon9.
+
+SCREENSHOT
+
+Crockford's nostrils, it works! We got ourselves a scrawny binary sum bonsai, and it checks out!
+Go check it with the table values, but it LGTM.
+
+Notice how we ended up with leaf values only, other nodes being only nested containers for them.
+The non-leaf nodes are like ancient fossils retaining the shape of recursive computation long after it ends.
+
+So we advanced through the input array without preserving any previous tree "levels".
+
+(A curious reader might find another solution that actually requires just one recursive call instead of two to go through the "levels" but let's leave it until your next picnic/subway commute).
+
+Then we don't actually need the tree-like structure, since it is inherently present in the nature of our computation itself!
+
+Let's bounce those arrays and produce just one, flat array with all the sums.
+Right now if we consider the return type of `sums`, we might call it "Hmmm, nested arrays, whatever" or, on second thought, a _tree_.
+We can achieve this if instead of producing new arrays we always flatten the ones we get from the "deeper" level.
+
+`Array.prototype.concat` can help us with that:
+
+```js
+function sums ([head, ...tail], sum = 0) {
+     if (head === undefined) {
+          return sum;
+     }
+     return [].concat(
+          sums(tail, sum),        // left or "0" subtree
+          sums(tail, sum + head)  // right or "1" subtree
+     );
+}
+```
+
+SCREENSHOT
+
+The return type changed from _tree_ to _array_.
+But never mind that, the function works!
+We can congratulate ourselves here on a problem well solved.
+Perhaps you found a better solution? Somewhere in this article there must be a hint or two on how to get in touch, I'd really appreciate that, thanks.
+
+It's time to walk away whistling, check your twitter and then check your fridge for sandwich ingredients.
+Maybe it's even not that late and the weather is nice?..
+
+...hold on, what about that `foldM` thing?
+
+You're already standing at your door, picnic basket in hand?
+
+Let's Purescript.
+
+Without any (further) dramatic device, let's see how beautiful and concise the solution of our sums problem is in Purescript:
 
 ```purescript
 sums :: Array Int -> Array Int
 sums = foldM (\x y -> [x, x + y]) 0
 ```
+
+Bear in mind, that the first line only serves as the function signature (yes, Purescript compiler, just like social networks, expects you to tell it everything about your data).
+
+Array of Ints goes in, Array of Ints goes out, simple enough.
+Otherwise that's it, that's the entire code. And it works too.
+
+The second line is something like this in JavaScript:
+
+```js
+
+const sums = foldM((x, y) => [x, x + y])(0);
+
+```
+
+All functions in Purescript are curried so to pass them multiple arguments you have to make multiple columns.
+This allows to omit any number of such calls, easily constructing partial functions.
+
+So `fold` is sort of like `reduce` in JavaScript, but what's `foldM`?
+
+Let's take a look at foldM's signature (the one for folding arrays):
+
+```purescript
+foldM :: forall m a b. Monad m => (a -> b -> m a) -> a -> Array b -> m a
+```
+
+Now, let's get back from behind your couch, take a deep breath and take another look.
+
+You didn't think we could make it through without monads, did you?
+I suggest you read either @paf31's chapter on monads, or LYAHFGL or this one: LINKS
+
+Anyway, we've got three types at play here, `a`, `b` and `m` and `m` has to be a Monad.
+
+`(a -> b -> m a)` is a typical reducer upgraded to return a monad: values of `a` (accumulator) and `b` (current value) go in, `a` contained in a monad `m` goes out.
+
+That might seem peculiar, because your typical reducer usually looks like this:
+
+`(a -> b -> a)`
+
+where it "merges" `b`s into `a` and then starts over again.
+
+So we have a way to go from `a` to `m a`. But not from `m a` to `a`.
+What the heck are we supposed to do in the following iteration?
+
+Turns out, we _do_ have such a way.
