@@ -415,7 +415,7 @@ WTH is `(\_ -> pure a)`? WTH is `a`?
 Right, `a` is an `Int` and represents the initial value. So when we feed just the value, but no numbers, `pure a` is returned.
 That would be the counterpart to our recursion ending condition.
 
-`pure a` is function (see Applicatives LINK) that, roughly speaking, wraps a simple value into a monad.
+`pure` is function (see Applicatives LINK) that, roughly speaking, wraps a simple value into a monad.
 In our case the monad is `Array`, don't we know how values get wrapped into arrays?!
 
 Indeed:
