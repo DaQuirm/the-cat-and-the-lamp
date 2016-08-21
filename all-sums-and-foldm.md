@@ -26,7 +26,7 @@ See, I knew you'd choose JavaScript.
 You're back? Good.
 Let's see what you wrote.
 
-First of all, you considered how many sums can an array of *N* numbers produce.
+First of all, you might have considered how many sums can an array of *N* numbers produce.
 Let's call the numbers n<sub>i</sub>, so a sum encompassing all the numbers would look like:
 
 n<sub>0</sub> + n<sub>1</sub> + n<sub>2</sub> + ... + n<sub>N</sub>
