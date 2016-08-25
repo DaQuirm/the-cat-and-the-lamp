@@ -344,7 +344,7 @@ foldM :: forall m a b. Monad m => (a -> b -> m a) -> a -> Array b -> m a
 Now, let's get back from behind your couch, take a deep breath and take another look.
 
 You didn't think we could make it through without monads, did you?
-I suggest you read either @paf31's chapter on monads, or LYAHFGL or this one: LINKS
+You read about monads in [pictures](http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html) or in [Purescript by Example](https://leanpub.com/purescript)'s chapter on monads or [Learn you a Haskell](http://learnyouahaskell.com/a-fistful-of-monads#the-monad-type-class).
 
 Anyway, we've got three types at play here, `a`, `b` and `m` and `m` has to be a Monad.
 
