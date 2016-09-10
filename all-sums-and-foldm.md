@@ -392,7 +392,7 @@ Its signature might seem peculiar, because your typical reducer usually looks li
 that is, it "merges" `b`s into `a` and then it's ready to be called again.
 
 So we have a way to go from `a` to `m a`. But not from `m a` to `a`.
-What the heck are we supposed to do when we have to pass `m a` into the "reducer" (or should I say "folder")?
+What the heck are we supposed to do when we have to pass `m a` into the "reducer" (or should I say "folder") when it expects a value of type `a`?
 
 Turns out, `foldM` does something behind the scenes making use of the fact that `m a` is a monad.
 
