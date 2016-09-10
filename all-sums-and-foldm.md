@@ -319,7 +319,7 @@ sums = foldM (\x y -> [x, x + y]) 0
 
 Bear in mind, that the first line only serves as the function signature (yes, Purescript compiler, just like social networks, expects you to tell it everything about your data).
 
-Array of Ints goes in, Array of Ints goes out, simple enough.
+Array of Ints goes in, Array of Ints goes out, ~~you can't explain that~~ simple enough.
 Otherwise that's it, that's the entire code. And it works too.
 
 The second line is something like this in JavaScript:
